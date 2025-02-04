@@ -23,14 +23,9 @@ app.use(
   })
 );
 
-// If using cookies/sessions:
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
 
 app.get("/", (req, res) => {
-  res.send("CORS Fixed!");
+  res.send("Hello World!");
 });
 
 
