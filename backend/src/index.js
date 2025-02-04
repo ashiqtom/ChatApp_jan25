@@ -2,19 +2,19 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+
 import path from "path";
 
-
-import { app, server } from "./lib/socket.js";
 import { connectDB } from "./lib/db.js";
 
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
-
-
-const __dirname = path.resolve();
+import { app, server } from "./lib/socket.js";
 
 dotenv.config();
+
+const PORT = process.env.PORT;
+const __dirname = path.resolve();
 
 app.use(express.json());
 app.use(cookieParser());
@@ -29,7 +29,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
 if (process.env.NODE_ENV === "production") {
-  console.log("Production mode");
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
   app.get("*", (req, res) => {
@@ -37,14 +36,7 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-const PORT = process.env.PORT || 5001;
-
-connectDB()
-  .then(() => {
-    server.listen(PORT, () =>{
-      console.log(`Server is running on port ${PORT}`);
-    });
-  })
-  .catch((err) => {
-    console.error(err);
-  });
+server.listen(PORT, () => {
+  console.log("server is running on PORT:" + PORT);
+  connectDB();
+});
